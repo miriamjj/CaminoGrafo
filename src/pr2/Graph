@@ -1,6 +1,6 @@
 package pr2;
-/*Necesitamos crear una matriz, el grafo lo elegimos nosotros (el que queramos), programar con pruebas (tests true)
-        programar mediante pilas, añadir comentarios de complejidad, hacer maven (añadiendo lo del blckboard)*/
+
+import java.util.*;
 
 public class Graph<V> {
     //Lista de adyacencia.
@@ -13,7 +13,11 @@ public class Graph<V> {
      * @return ‘true‘ si no estaba anteriormente y ‘false‘ en caso contrario.
      ******************************************************************/
     public boolean addVertex(V v) {
-        return true; //Este código hay que modificarlo.
+        if(adjacencyList.containsKey(v)){
+            return false;
+        }
+        adjacencyList.put(v, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
+        return true;
     }
 
     /******************************************************************
@@ -25,7 +29,22 @@ public class Graph<V> {
      * @return ‘true‘ si no existía el arco y ‘false‘ en caso contrario.
      ******************************************************************/
     public boolean addEdge(V v1, V v2) {
-        return true; //Este código hay que modificarlo.
+        if(!adjacencyList.containsKey(v1)){
+            adjacencyList.put(v1, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
+        }
+        if(!adjacencyList.containsKey(v2)){
+            adjacencyList.put(v2, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
+        }
+        Set<V> vecinosV1 = adjacencyList.get(v1); // Devuelve el conjunto de vértices vecinos a v1
+                                                  //vecinosV1 es de tipo Set<V>
+        Set<V> vecinosV2 = adjacencyList.get(v2); // Devuelve el conjunto de vértices vecinos a v2
+
+        if(vecinosV1.contains(v2)){ //Comprobar si existe arco entre v1 y v2
+            return false;
+        }
+        vecinosV1.add(v2); //Añadimos v2 al conjunto de vecinos de v1
+        vecinosV2.add(v1); //Añadimos v1 al conjunto de vecinos de v2
+        return true;
     }
 
     /******************************************************************
@@ -34,8 +53,8 @@ public class Graph<V> {
      * @param v vértice del que se obtienen los adyacentes.
      * @return conjunto de vértices adyacentes.
      ******************************************************************/
-    public Set<V> obtainAdjacents(V v) throws Exception {
-        return null; //Este código hay que modificarlo.
+    public Set<V> obtainAdjacents(V v) throws Exception{
+        return adjacencyList.get(v); //Devuelve el conjunto de vecinos de v
     }
 
     /******************************************************************
@@ -45,7 +64,7 @@ public class Graph<V> {
      * @return ‘true‘ si ‘v‘ es un vértice del grafo.
      ******************************************************************/
     public boolean containsVertex(V v) {
-        return true; //Este código hay que modificarlo.
+        return adjacencyList.containsKey(v); // Comprueba si la lista de adjacencias contiene v
     }
 
     /******************************************************************
@@ -55,7 +74,14 @@ public class Graph<V> {
      ******************************************************************/
     @Override
     public String toString() {
-        return ""; //Este código hay que modificarlo.
+        StringBuilder cadena = new StringBuilder();
+        for(V v : adjacencyList.keySet()){
+            cadena.append(v.toString());
+            cadena.append(": ");
+            cadena.append(adjacencyList.get(v).toString());
+            cadena.append("\n");
+        }
+        return cadena.toString();
     }
 
     /******************************************************************
@@ -66,7 +92,6 @@ public class Graph<V> {
      * @return lista con la secuencia de vértices desde ‘v1‘ hasta ‘v2‘ pasando por arcos del grafo.
      ******************************************************************/
     public List<V> onePath(V v1, V v2) {
-        return null; //Este código hay que modificarlo.
+        return null;
     }
 }
-
