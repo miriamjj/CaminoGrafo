@@ -1,5 +1,5 @@
 package pr2;
-
+import java.lang.reflect.GenericDeclaration;
 import java.util.*;
 
 public class Graph<V> {
@@ -13,7 +13,7 @@ public class Graph<V> {
      * @return ‘true‘ si no estaba anteriormente y ‘false‘ en caso contrario.
      ******************************************************************/
     public boolean addVertex(V v) {
-        if(adjacencyList.containsKey(v)){
+        if (adjacencyList.containsKey(v)) {
             return false;
         }
         adjacencyList.put(v, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
@@ -29,17 +29,17 @@ public class Graph<V> {
      * @return ‘true‘ si no existía el arco y ‘false‘ en caso contrario.
      ******************************************************************/
     public boolean addEdge(V v1, V v2) {
-        if(!adjacencyList.containsKey(v1)){
+        if (!adjacencyList.containsKey(v1)) {
             adjacencyList.put(v1, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
         }
-        if(!adjacencyList.containsKey(v2)){
+        if (!adjacencyList.containsKey(v2)) {
             adjacencyList.put(v2, new HashSet<V>()); //Añadimos el vértice y un conjunto de vecinos vacío
         }
         Set<V> vecinosV1 = adjacencyList.get(v1); // Devuelve el conjunto de vértices vecinos a v1
-                                                  //vecinosV1 es de tipo Set<V>
+        //vecinosV1 es de tipo Set<V>
         Set<V> vecinosV2 = adjacencyList.get(v2); // Devuelve el conjunto de vértices vecinos a v2
 
-        if(vecinosV1.contains(v2)){ //Comprobar si existe arco entre v1 y v2
+        if (vecinosV1.contains(v2)) { //Comprobar si existe arco entre v1 y v2
             return false;
         }
         vecinosV1.add(v2); //Añadimos v2 al conjunto de vecinos de v1
@@ -53,7 +53,7 @@ public class Graph<V> {
      * @param v vértice del que se obtienen los adyacentes.
      * @return conjunto de vértices adyacentes.
      ******************************************************************/
-    public Set<V> obtainAdjacents(V v) throws Exception{
+    public Set<V> obtainAdjacents(V v) throws Exception {
         return adjacencyList.get(v); //Devuelve el conjunto de vecinos de v
     }
 
@@ -75,12 +75,14 @@ public class Graph<V> {
     @Override
     public String toString() {
         StringBuilder cadena = new StringBuilder();
-        for(V v : adjacencyList.keySet()){
+        for (V v : adjacencyList.keySet()) {
             cadena.append(v.toString());
             cadena.append(": ");
             cadena.append(adjacencyList.get(v).toString());
             cadena.append("\n");
         }
+
+
         return cadena.toString();
     }
 
@@ -92,6 +94,40 @@ public class Graph<V> {
      * @return lista con la secuencia de vértices desde ‘v1‘ hasta ‘v2‘ pasando por arcos del grafo.
      ******************************************************************/
     public List<V> onePath(V v1, V v2) {
-        return null;
+        List<V> camino = new ArrayList<V>();
+        List<V> reverse = null;
+        HashMap<V, V> traza = new HashMap<V, V>();
+        LinkedList<V> pila = new LinkedList<V>();
+        boolean encontrado = false;
+        pila.push(v1);
+        traza.put(v1, null);
+        while (!pila.isEmpty() && !encontrado) {
+            V v = pila.pop();
+            if (v.equals(v2))
+                encontrado = true;
+            if (!encontrado) {
+                try {
+                    for (V adjacent : obtainAdjacents(v))
+                        if (!traza.containsKey(adjacent)) {
+                            pila.push(adjacent);
+                            traza.put(adjacent, v);
+                        }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        if (encontrado) {
+            V v = v2;
+            while (v != null) {
+                camino.add(v);
+                v = traza.get(v);
+            }
+            reverse = new ArrayList<V>(camino.size());
+            for (int i = camino.size() - 1; i >= 0; i--)
+                reverse.add(camino.get(i));
+        }
+        return reverse;
     }
 }
+
