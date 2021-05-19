@@ -19,9 +19,9 @@ El jar para ejecutar el proyecto se crea usando:
     $ mvn clean compile assembly:single 
     $ mvn jar target/my_app_SNAPSHOT_1.0 
 
-Se crea la documentación del proyecto usando:
+Se crea la documentación del proyecto (javadoc) usando:
 
-	$ mvn javadoc
+	$ mvn site
 
 Para ejecutar los tests se usa el comando:
 
